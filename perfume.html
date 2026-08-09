@@ -1,0 +1,2563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Scentory — Perfume Collection</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --ink: #171517;
+      --surface: #211e20;
+      --elevated: #2a2526;
+      --cream: #f4eee6;
+      --muted: #b7aaa0;
+      --line: #4a3d37;
+      --gold: #c9a66b;
+      --bright: #e2c58a;
+      --wine: #6b3037;
+      --blush: #c79b91;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background: var(--ink);
+      color: var(--cream);
+      font-family: "IBM Plex Sans", sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body.modal-open {
+      overflow: hidden;
+    }
+
+    a,
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    button,
+    a {
+      color: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    ::selection {
+      background: var(--gold);
+      color: var(--ink);
+    }
+
+    /* =========================
+       HEADER
+    ========================= */
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      height: 78px;
+      padding: 0 5vw;
+      display: flex;
+      align-items: center;
+      gap: 5vw;
+      background: rgba(33, 30, 32, 0.95);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .wordmark {
+      display: flex;
+      flex-direction: column;
+      text-decoration: none;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    .wordmark span,
+    .footer-brand {
+      font-family: "Cormorant Garamond", serif;
+      font-size: 28px;
+      letter-spacing: .13em;
+    }
+
+    .wordmark small,
+    .footer-brand small {
+      margin-top: 5px;
+      color: var(--gold);
+      font: 10px "IBM Plex Mono", monospace;
+      letter-spacing: .14em;
+    }
+
+    .desktop-nav {
+      display: flex;
+      gap: 30px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .desktop-nav a {
+      text-decoration: none;
+      transition: color .2s ease;
+    }
+
+    .desktop-nav a:hover {
+      color: var(--bright);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-left: auto;
+    }
+
+    .icon-button,
+    .menu-button {
+      border: 0;
+      background: transparent;
+      color: var(--cream);
+      padding: 8px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .bag-button {
+      border: 1px solid var(--line);
+      background: transparent;
+      padding: 10px 14px;
+      color: var(--cream);
+      font-size: 11px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .bag-button span {
+      color: var(--gold);
+      margin-left: 7px;
+    }
+
+    .menu-button {
+      display: none;
+    }
+
+    /* =========================
+       HERO
+    ========================= */
+
+    .hero {
+      min-height: 680px;
+      padding: 80px 8vw 72px;
+      display: grid;
+      grid-template-columns: 1.15fr .85fr;
+      grid-template-rows: 1fr auto;
+      gap: 35px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-copy {
+      align-self: center;
+      z-index: 2;
+    }
+
+    .eyebrow {
+      display: block;
+      color: var(--gold);
+      font: 11px "IBM Plex Mono", monospace;
+      letter-spacing: .17em;
+      text-transform: uppercase;
+    }
+
+    .hero h1 {
+      margin: 30px 0;
+      font: 500 clamp(58px, 8vw, 116px)/.84 "Cormorant Garamond", serif;
+      letter-spacing: -.04em;
+    }
+
+    .hero h1 em,
+    h2 em {
+      color: var(--gold);
+      font-weight: 400;
+    }
+
+    .hero-copy p {
+      max-width: 400px;
+      color: var(--muted);
+      line-height: 1.8;
+      font-size: 15px;
+    }
+
+    .text-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 25px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--gold);
+      color: var(--bright);
+      text-decoration: none;
+      font-size: 12px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    .hero-image {
+      grid-column: 2;
+      grid-row: 1 / 3;
+      min-height: 540px;
+      position: relative;
+    }
+
+    .hero-image::after {
+      content: "";
+      position: absolute;
+      inset: 8% -15% 2% 15%;
+      background: var(--wine);
+      opacity: .45;
+    }
+
+    .hero-image img {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+      max-height: 590px;
+      object-fit: cover;
+      object-position: center;
+      filter: saturate(.7) contrast(1.06);
+    }
+
+    .hero-stamp {
+      position: absolute;
+      z-index: 3;
+      right: -20px;
+      bottom: 28px;
+      padding: 12px 14px;
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      text-align: center;
+      font: 10px "IBM Plex Mono", monospace;
+      letter-spacing: .12em;
+    }
+
+    .hero-stamp b {
+      font-size: 16px;
+    }
+
+    .hero-note {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      max-width: 430px;
+      padding-top: 17px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .hero-note .spark {
+      color: var(--gold);
+      font-size: 17px;
+    }
+
+    .hero-note .new {
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: .12em;
+    }
+
+    .hero-note strong {
+      color: var(--cream);
+      font-weight: 500;
+    }
+
+    /* =========================
+       MANIFESTO
+    ========================= */
+
+    .manifesto {
+      padding: 115px 8vw 130px;
+      display: grid;
+      grid-template-columns: 1fr 2fr 1fr;
+      gap: 30px;
+      border-top: 1px solid var(--line);
+      background: #1c191b;
+    }
+
+    .manifesto p {
+      max-width: 760px;
+      margin: 0;
+      font: 500 clamp(32px, 4.2vw, 60px)/.97 "Cormorant Garamond", serif;
+    }
+
+    .manifesto .scroll-note {
+      align-self: end;
+      color: var(--muted);
+      text-align: right;
+      font: 10px "IBM Plex Mono", monospace;
+    }
+
+    /* =========================
+       COLLECTIONS
+    ========================= */
+
+    .collection-rail {
+      padding: 100px 8vw;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 18px;
+    }
+
+    .collection-rail h2,
+    .section-heading h2 {
+      margin: 23px 0;
+      font: 500 54px/.9 "Cormorant Garamond", serif;
+      letter-spacing: -.03em;
+    }
+
+    .rail-card {
+      min-height: 280px;
+      padding: 25px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border: 1px solid var(--line);
+      background: var(--elevated);
+      transition: transform .3s ease;
+    }
+
+    .rail-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .rail-card > span {
+      color: var(--gold);
+      font: 10px "IBM Plex Mono", monospace;
+      letter-spacing: .12em;
+    }
+
+    .rail-card strong {
+      font: 500 34px "Cormorant Garamond", serif;
+    }
+
+    .rail-card small {
+      color: var(--muted);
+    }
+
+    .rail-card a {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--bright);
+      font-size: 12px;
+      text-decoration: none;
+    }
+
+    .rail-blush {
+      background: var(--blush);
+      color: #211e20;
+      border-color: var(--blush);
+    }
+
+    .rail-blush > span,
+    .rail-blush a {
+      color: #44272a;
+    }
+
+    /* =========================
+       CATALOG
+    ========================= */
+
+    .catalog-section {
+      padding: 90px 5vw 130px;
+      background: var(--surface);
+    }
+
+    .section-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      padding: 0 3vw 55px;
+    }
+
+    .section-heading p {
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    .catalog-toolbar {
+      padding: 17px 0;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      flex-wrap: wrap;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .filter-trigger {
+      border: 0;
+      background: transparent;
+      color: var(--bright);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .search-field {
+      min-width: 280px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 12px;
+      border: 1px solid var(--gold);
+    }
+
+    .search-field input {
+      width: 220px;
+      border: 0;
+      outline: none;
+      background: transparent;
+      color: var(--cream);
+    }
+
+    .search-field button {
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+    }
+
+    .filter-group {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .filter-group button {
+      padding: 8px 10px;
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .filter-group button:hover,
+    .filter-group button.selected {
+      color: var(--bright);
+      border-color: var(--gold);
+    }
+
+    .sort-wrap {
+      position: relative;
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .sort-wrap select {
+      appearance: none;
+      padding: 8px 20px 8px 0;
+      border: 0;
+      outline: 0;
+      background: transparent;
+      color: var(--cream);
+      cursor: pointer;
+    }
+
+    .sort-wrap option {
+      background: var(--surface);
+      color: var(--cream);
+    }
+
+    .results-line {
+      padding: 23px 0;
+      display: flex;
+      justify-content: space-between;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .results-line b {
+      color: var(--cream);
+    }
+
+    .demo-label {
+      color: var(--gold);
+      font: 10px "IBM Plex Mono", monospace;
+    }
+
+    /* =========================
+       PRODUCT GRID
+    ========================= */
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 30px 18px;
+    }
+
+    .perfume-card {
+      min-width: 0;
+    }
+
+    .card-image-wrap {
+      position: relative;
+      aspect-ratio: 4 / 5;
+      overflow: hidden;
+      background: #302a2b;
+      border: 1px solid var(--line);
+    }
+
+    .card-image-wrap::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 35%;
+      height: 2px;
+      background: var(--gold);
+      transition: width .3s ease;
+    }
+
+    .perfume-card:hover .card-image-wrap::after {
+      width: 100%;
+    }
+
+    .card-image-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: saturate(.72);
+      transition: transform .45s ease, filter .45s ease;
+    }
+
+    .perfume-card:hover .card-image-wrap img {
+      transform: scale(1.03);
+      filter: saturate(.95);
+    }
+
+    .favorite {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      z-index: 2;
+      width: 37px;
+      height: 37px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 0;
+      border-radius: 50%;
+      background: rgba(23,21,23,.7);
+      color: var(--cream);
+    }
+
+    .favorite.active {
+      color: var(--bright);
+    }
+
+    .card-index {
+      position: absolute;
+      z-index: 2;
+      right: 12px;
+      bottom: 12px;
+      color: var(--cream);
+      font: 10px "IBM Plex Mono", monospace;
+    }
+
+    .card-copy {
+      padding: 14px 1px;
+    }
+
+    .card-meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      color: var(--muted);
+      font: 10px "IBM Plex Mono", monospace;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .card-copy h3 {
+      margin: 10px 0 15px;
+      font: 500 23px "Cormorant Garamond", serif;
+    }
+
+    .card-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .card-bottom strong {
+      font: 13px "IBM Plex Mono", monospace;
+    }
+
+    .details-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      border: 0;
+      background: transparent;
+      color: var(--gold);
+      font-size: 11px;
+    }
+
+    .empty-state {
+      padding: 110px 20px;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    .empty-state h3 {
+      margin: 0 0 10px;
+      color: var(--cream);
+      font: 500 45px "Cormorant Garamond", serif;
+    }
+
+    /* =========================
+       FOOTER
+    ========================= */
+
+    footer {
+      padding: 80px 8vw;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 40px;
+      align-items: end;
+      background: #0f1012;
+    }
+
+    footer h2 {
+      margin: 18px 0 0;
+      font: 500 48px "Cormorant Garamond", serif;
+    }
+
+    footer p {
+      max-width: 280px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    /* =========================
+       MODAL
+    ========================= */
+
+    .detail-overlay {
+      position: fixed;
+      z-index: 500;
+      inset: 0;
+      display: flex;
+      justify-content: flex-end;
+      background: rgba(15,16,18,.84);
+      backdrop-filter: blur(8px);
+    }
+
+    .detail-panel {
+      width: min(920px, 100%);
+      height: 100%;
+      overflow: auto;
+      position: relative;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      background: var(--surface);
+    }
+
+    .detail-image {
+      min-height: 100%;
+      background: #2e2729;
+    }
+
+    .detail-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: saturate(.72);
+    }
+
+    .detail-info {
+      padding: 75px 45px 45px;
+    }
+
+    .detail-close {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      z-index: 5;
+      width: 42px;
+      height: 42px;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      color: var(--cream);
+      font-size: 24px;
+    }
+
+    .detail-info h2 {
+      margin: 20px 0;
+      font: 500 56px/.88 "Cormorant Garamond", serif;
+    }
+
+    .rating {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      color: var(--gold);
+      font: 12px "IBM Plex Mono", monospace;
+    }
+
+    .rating span {
+      margin-left: 5px;
+      color: var(--muted);
+    }
+
+    .detail-description {
+      color: var(--muted);
+      line-height: 1.8;
+      font-size: 14px;
+    }
+
+    .detail-price {
+      display: flex;
+      align-items: baseline;
+      gap: 18px;
+      margin: 30px 0;
+    }
+
+    .detail-price strong {
+      font: 22px "IBM Plex Mono", monospace;
+    }
+
+    .detail-price span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .notes {
+      padding: 18px 0;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .note-row {
+      display: flex;
+      gap: 20px;
+      margin-top: 15px;
+      font-size: 13px;
+    }
+
+    .note-row b {
+      width: 55px;
+      color: var(--gold);
+      font: 10px "IBM Plex Mono", monospace;
+    }
+
+    .detail-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      padding: 25px 0;
+    }
+
+    .detail-stats div {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .detail-stats small {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .detail-stats strong {
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .detail-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .amazon-button {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 9px;
+      padding: 15px;
+      background: var(--gold);
+      color: #211e20;
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      font-size: 11px;
+      font-weight: 600;
+      transition: background .2s ease;
+    }
+
+    .amazon-button:hover {
+      background: var(--bright);
+    }
+
+    .save-button {
+      width: 55px;
+      border: 1px solid var(--line);
+      background: transparent;
+      color: var(--cream);
+      font-size: 19px;
+    }
+
+    .save-button.active {
+      color: var(--gold);
+    }
+
+    .demo-note {
+      margin-top: 17px;
+      color: var(--muted);
+      font: 10px/1.5 "IBM Plex Mono", monospace;
+    }
+
+    /* =========================
+       FOCUS / ACCESSIBILITY
+    ========================= */
+
+    :focus-visible {
+      outline: 2px solid var(--bright);
+      outline-offset: 3px;
+    }
+
+    /* =========================
+       RESPONSIVE
+    ========================= */
+
+    @media (max-width: 1000px) {
+      .product-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .hero {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .site-header {
+        height: 68px;
+        padding: 0 5vw;
+      }
+
+      .desktop-nav {
+        display: none;
+        position: absolute;
+        top: 68px;
+        left: 0;
+        right: 0;
+        padding: 25px 6vw;
+        flex-direction: column;
+        background: var(--surface);
+        border-bottom: 1px solid var(--line);
+      }
+
+      .desktop-nav.open {
+        display: flex;
+      }
+
+      .menu-button {
+        display: inline-flex;
+      }
+
+      .hero {
+        display: flex;
+        flex-direction: column;
+        padding: 55px 6vw 45px;
+      }
+
+      .hero-image {
+        order: -1;
+        min-height: 390px;
+      }
+
+      .hero h1 {
+        font-size: 70px;
+      }
+
+      .hero-note {
+        margin-top: 25px;
+      }
+
+      .manifesto {
+        display: block;
+        padding: 75px 6vw;
+      }
+
+      .manifesto p {
+        margin: 25px 0;
+        font-size: 39px;
+      }
+
+      .manifesto .scroll-note {
+        display: none;
+      }
+
+      .collection-rail {
+        display: flex;
+        overflow-x: auto;
+        padding: 70px 6vw;
+      }
+
+      .collection-rail > div:first-child {
+        min-width: 260px;
+      }
+
+      .rail-card {
+        min-width: 255px;
+      }
+
+      .catalog-section {
+        padding: 65px 5vw 90px;
+      }
+
+      .section-heading {
+        display: block;
+        padding: 0 0 35px;
+      }
+
+      .section-heading h2 {
+        font-size: 50px;
+      }
+
+      .section-heading p {
+        margin-top: 25px;
+      }
+
+      .catalog-toolbar {
+        gap: 10px;
+      }
+
+      .filter-group {
+        width: 100%;
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        order: 5;
+      }
+
+      .filter-group button {
+        white-space: nowrap;
+      }
+
+      .sort-wrap {
+        margin-left: 0;
+      }
+
+      .product-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 25px 12px;
+      }
+
+      .card-meta {
+        display: block;
+        line-height: 1.6;
+      }
+
+      .card-meta span {
+        display: block;
+      }
+
+      .card-copy h3 {
+        font-size: 21px;
+      }
+
+      .results-line {
+        display: block;
+      }
+
+      .demo-label {
+        display: block;
+        margin-top: 10px;
+        font-size: 9px;
+      }
+
+      footer {
+        display: block;
+        padding: 65px 6vw;
+      }
+
+      footer h2 {
+        margin: 35px 0;
+      }
+
+      footer p {
+        margin-top: 40px;
+      }
+
+      .detail-panel {
+        display: block;
+      }
+
+      .detail-image {
+        height: 300px;
+        min-height: 0;
+      }
+
+      .detail-info {
+        padding: 40px 25px 35px;
+      }
+
+      .detail-info h2 {
+        font-size: 48px;
+      }
+
+      .detail-close {
+        top: 15px;
+        right: 15px;
+      }
+    }
+
+    @media (max-width: 450px) {
+      .wordmark span {
+        font-size: 23px;
+      }
+
+      .bag-button {
+        padding: 9px 10px;
+      }
+
+      .hero h1 {
+        font-size: 62px;
+      }
+
+      .hero-image {
+        min-height: 330px;
+      }
+
+      .search-field {
+        width: 100%;
+        min-width: 0;
+      }
+
+      .search-field input {
+        width: 100%;
+      }
+
+      .detail-info h2 {
+        font-size: 43px;
+      }
+
+      .detail-stats {
+        gap: 6px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        transition: none !important;
+        animation: none !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="app-shell" id="top">
+
+    <!-- HEADER -->
+    <header class="site-header" data-testid="site-header">
+
+      <a href="#top" class="wordmark">
+        <span>SCENTORY</span>
+        <small>PERFUME COLLECTION</small>
+      </a>
+
+      <nav class="desktop-nav" id="desktopNav">
+        <a href="#catalog">Shop</a>
+        <a href="#collections">Collections</a>
+        <a href="#notes">Notes</a>
+        <a href="#about">About</a>
+      </nav>
+
+      <div class="header-actions">
+
+        <button
+          class="icon-button"
+          id="headerSearch"
+          aria-label="Search perfumes"
+          data-testid="header-search-button"
+        >
+          ⌕
+        </button>
+
+        <button
+          class="bag-button"
+          id="savedButton"
+          data-testid="header-bag-button"
+        >
+          Saved <span id="savedCount">0</span>
+        </button>
+
+        <button
+          class="menu-button"
+          id="menuButton"
+          aria-label="Open menu"
+          data-testid="mobile-menu-button"
+        >
+          ☰
+        </button>
+
+      </div>
+    </header>
+
+
+    <main>
+
+      <!-- HERO -->
+      <section class="hero">
+
+        <div class="hero-copy">
+
+          <span class="eyebrow">
+            THE FRAGRANCE INDEX · 001
+          </span>
+
+          <h1>
+            Find the scent<br>
+            <em>that stays.</em>
+          </h1>
+
+          <p>
+            A considered edit of 120 fragrances for every mood,
+            memory, and after-dark ritual.
+          </p>
+
+          <a href="#catalog" class="text-link">
+            Explore the collection ↗
+          </a>
+
+        </div>
+
+        <div class="hero-image">
+
+          <img
+            src="https://images.unsplash.com/photo-1654896926495-8163cf4964fe?auto=format&fit=crop&w=1400&q=85"
+            alt="Perfume bottle in soft shadow"
+          >
+
+          <div class="hero-stamp">
+            EST.<br>
+            <b>2025</b>
+          </div>
+
+        </div>
+
+        <div class="hero-note">
+
+          <span class="spark">✦</span>
+
+          <span class="new">New in</span>
+
+          <strong>The Nocturne Edit</strong>
+
+          <span>12 compositions for low light.</span>
+
+        </div>
+
+      </section>
+
+
+      <!-- MANIFESTO -->
+      <section class="manifesto" id="about">
+
+        <div>
+          <span class="eyebrow">
+            A PERSONAL LIBRARY
+          </span>
+        </div>
+
+        <p>
+          Fragrance is the invisible architecture of a room.
+          We catalog the pieces that change how you enter it.
+        </p>
+
+        <span class="scroll-note">
+          SCROLL TO DISCOVER ↓
+        </span>
+
+      </section>
+
+
+      <!-- COLLECTIONS -->
+      <section class="collection-rail" id="collections">
+
+        <div>
+          <span class="eyebrow">
+            Curated by atmosphere
+          </span>
+
+          <h2>
+            Choose your<br>
+            <em>afterglow.</em>
+          </h2>
+        </div>
+
+        <div class="rail-card">
+
+          <span>01 / WOODS</span>
+
+          <strong>Quiet Woods</strong>
+
+          <small>
+            Dry cedar · skin musk · ash
+          </small>
+
+          <a href="#catalog">
+            Shop edit ↗
+          </a>
+
+        </div>
+
+        <div class="rail-card rail-blush">
+
+          <span>02 / LIGHT</span>
+
+          <strong>Citrus After Dark</strong>
+
+          <small>
+            Yuzu · neroli · warm amber
+          </small>
+
+          <a href="#catalog">
+            Shop edit ↗
+          </a>
+
+        </div>
+
+      </section>
+
+
+      <!-- CATALOG -->
+      <section class="catalog-section" id="catalog">
+
+        <div class="section-heading">
+
+          <div>
+            <span class="eyebrow">
+              THE FULL INDEX
+            </span>
+
+            <h2>
+              120 scents,<br>
+              <em>one place.</em>
+            </h2>
+          </div>
+
+          <p>
+            Search by house, note, or simply follow your nose.<br>
+            Every bottle has a story to tell.
+          </p>
+
+        </div>
+
+
+        <!-- TOOLBAR -->
+        <div class="catalog-toolbar">
+
+          <button
+            class="filter-trigger"
+            id="searchTrigger"
+            data-testid="catalog-filter-button"
+          >
+            ⌕ Search collection
+          </button>
+
+          <div
+            class="search-field"
+            id="searchField"
+            style="display:none;"
+          >
+            <span>⌕</span>
+
+            <input
+              id="searchInput"
+              type="search"
+              placeholder="Search by name or house"
+              data-testid="catalog-search-input"
+            >
+
+            <button id="closeSearch" aria-label="Close search">
+              ×
+            </button>
+          </div>
+
+
+          <div class="filter-group" id="filterGroup">
+
+            <button
+              class="selected"
+              data-family="All notes"
+            >
+              All notes
+            </button>
+
+            <button data-family="Woody">Woody</button>
+            <button data-family="Floral">Floral</button>
+            <button data-family="Amber">Amber</button>
+            <button data-family="Citrus">Citrus</button>
+            <button data-family="Musk">Musk</button>
+            <button data-family="Fresh">Fresh</button>
+
+          </div>
+
+
+          <label class="sort-wrap">
+
+            <span>Sort</span>
+
+            <select id="sortSelect" data-testid="catalog-sort-select">
+
+              <option value="featured">Featured</option>
+              <option value="rating">Highest rated</option>
+              <option value="price-low">Price: low</option>
+              <option value="price-high">Price: high</option>
+              <option value="newest">Newest</option>
+
+            </select>
+
+            <span>⌄</span>
+
+          </label>
+
+        </div>
+
+
+        <div class="results-line">
+
+          <span>
+            <b id="resultCount">120</b>
+            fragrances found
+          </span>
+
+          <span class="demo-label">
+            DEMO CATALOG · AMAZON DESTINATIONS GENERATED
+          </span>
+
+        </div>
+
+
+        <!-- PRODUCTS -->
+        <div
+          class="product-grid"
+          id="productGrid"
+        ></div>
+
+
+        <div
+          class="empty-state"
+          id="emptyState"
+          style="display:none;"
+        >
+
+          <h3>Nothing in the air.</h3>
+
+          <p>
+            Try another house, note, or a softer search.
+          </p>
+
+        </div>
+
+      </section>
+
+    </main>
+
+
+    <!-- FOOTER -->
+    <footer>
+
+      <div class="footer-brand">
+        SCENTORY
+        <small>PERFUME COLLECTION</small>
+      </div>
+
+      <div>
+        <span class="eyebrow">
+          Your next signature
+        </span>
+
+        <h2>
+          Leave a trace.
+        </h2>
+      </div>
+
+      <p>
+        Every Amazon handoff opens in a new tab.
+        Scentory is an independent fragrance index.
+      </p>
+
+    </footer>
+
+  </div>
+
+
+  <!-- PRODUCT MODAL -->
+  <div
+    class="detail-overlay"
+    id="productModal"
+    style="display:none;"
+    role="dialog"
+    aria-modal="true"
+    data-testid="product-detail-modal"
+  >
+
+    <div class="detail-panel">
+
+      <button
+        class="detail-close"
+        id="detailClose"
+        aria-label="Close product details"
+        data-testid="product-detail-close"
+      >
+        ×
+      </button>
+
+
+      <div class="detail-image">
+
+        <img
+          id="detailImage"
+          src=""
+          alt=""
+        >
+
+      </div>
+
+
+      <div class="detail-info">
+
+        <span
+          class="eyebrow"
+          id="detailBrand"
+        ></span>
+
+        <h2 id="detailName"></h2>
+
+
+        <div class="rating">
+
+          ★
+
+          <span id="detailRating"></span>
+
+          <span>
+            Editorial score
+          </span>
+
+        </div>
+
+
+        <p
+          class="detail-description"
+          id="detailDescription"
+        ></p>
+
+
+        <div class="detail-price">
+
+          <strong id="detailPrice"></strong>
+
+          <span id="detailSize"></span>
+
+        </div>
+
+
+        <div
+          class="notes"
+          data-testid="product-notes-section"
+        >
+
+          <span class="eyebrow">
+            Notes pyramid
+          </span>
+
+          <div class="note-row">
+            <b>TOP</b>
+            <span id="detailTop"></span>
+          </div>
+
+          <div class="note-row">
+            <b>HEART</b>
+            <span id="detailHeart"></span>
+          </div>
+
+          <div class="note-row">
+            <b>BASE</b>
+            <span id="detailBase"></span>
+          </div>
+
+        </div>
+
+
+        <div class="detail-stats">
+
+          <div>
+            <small>Longevity</small>
+            <strong id="detailLongevity"></strong>
+          </div>
+
+          <div>
+            <small>Sillage</small>
+            <strong id="detailSillage"></strong>
+          </div>
+
+          <div>
+            <small>For</small>
+            <strong id="detailGender"></strong>
+          </div>
+
+        </div>
+
+
+        <div class="detail-actions">
+
+          <a
+            class="amazon-button"
+            id="amazonButton"
+            href="#"
+            target="_blank"
+            rel="noopener noreferrer"
+            data-testid="product-buy-on-amazon-button"
+          >
+            Buy on Amazon ↗
+          </a>
+
+          <button
+            class="save-button"
+            id="modalFavorite"
+            data-testid="product-save-button"
+          >
+            ♡
+          </button>
+
+        </div>
+
+
+        <p class="demo-note">
+          DEMO DESTINATION · This generated Amazon search link
+          can be replaced with your individual product or affiliate URL.
+        </p>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <script>
+
+    /* =========================================
+       SCENTORY — DETERMINISTIC 120 PRODUCT DATA
+    ========================================= */
+
+    const imagePool = [
+      "https://images.unsplash.com/photo-1654896926495-8163cf4964fe?auto=format&fit=crop&w=900&q=85",
+      "https://images.unsplash.com/photo-1709662369877-187c3420cc7d?auto=format&fit=crop&w=900&q=85",
+      "https://images.unsplash.com/photo-1648208567967-19e0b7b10066?auto=format&fit=crop&w=900&q=85",
+      "https://images.unsplash.com/photo-1611255680915-114e3414c085?auto=format&fit=crop&w=900&q=85"
+    ];
+
+    const brands = [
+      "Aurelia",
+      "Maison Orée",
+      "Atelier No. 7",
+      "Velour & Co.",
+      "Neroli House",
+      "Sillage Studio",
+      "Orris Objects",
+      "Morrow Parfums"
+    ];
+
+    const families = [
+      "Woody",
+      "Floral",
+      "Amber",
+      "Citrus",
+      "Musk",
+      "Fresh"
+    ];
+
+    const genders = [
+      "Unisex",
+      "For Her",
+      "For Him"
+    ];
+
+    const occasions = [
+      "Evening",
+      "Everyday",
+      "Date Night",
+      "Office",
+      "Weekend"
+    ];
+
+    const names = [
+      "After Rain",
+      "Velvet Smoke",
+      "Solar Bloom",
+      "Nocturne",
+      "Quiet Hours",
+      "Golden Hour",
+      "Paper Skin",
+      "Sunday Sillage",
+      "Orris No. 4",
+      "Cedar Theory",
+      "Moon Milk",
+      "Cassis Archive",
+      "Linen Muse",
+      "Wild Fig",
+      "Black Tea Club"
+    ];
+
+    const topNotes = [
+      "Bergamot",
+      "Pink pepper",
+      "Pear",
+      "Mandarin",
+      "Saffron"
+    ];
+
+    const heartNotes = [
+      "Iris",
+      "Jasmine sambac",
+      "Black tea",
+      "Orange blossom",
+      "Rose absolute"
+    ];
+
+    const baseNotes = [
+      "Cedarwood",
+      "Skin musk",
+      "Amber resin",
+      "Vetiver",
+      "Sandalwood"
+    ];
+
+    const longevityValues = [
+      "4–6 hours",
+      "6–8 hours",
+      "8+ hours"
+    ];
+
+    const sillageValues = [
+      "Intimate",
+      "Moderate",
+      "Statement"
+    ];
+
+
+    const perfumes = Array.from(
+      { length: 120 },
+      (_, index) => {
+
+        const family =
+          families[index % families.length];
+
+        const baseName =
+          names[index % names.length];
+
+        const name =
+          index > 14
+            ? `${baseName} No. ${String(index + 1).padStart(2, "0")}`
+            : baseName;
+
+        const brand =
+          brands[index % brands.length];
+
+        return {
+
+          id: `scent-${index + 1}`,
+
+          name,
+
+          brand,
+
+          family,
+
+          gender:
+            genders[index % genders.length],
+
+          occasion:
+            occasions[index % occasions.length],
+
+          price:
+            48 + ((index * 17) % 128),
+
+          rating:
+            Number(
+              (
+                4.2 +
+                ((index * 7) % 8) / 10
+              ).toFixed(1)
+            ),
+
+          year:
+            2025 - (index % 6),
+
+          size:
+            index % 3 === 0
+              ? "50 ml"
+              : "75 ml",
+
+          longevity:
+            longevityValues[index % 3],
+
+          sillage:
+            sillageValues[index % 3],
+
+          notes: {
+
+            top:
+              topNotes[index % topNotes.length],
+
+            heart:
+              heartNotes[index % heartNotes.length],
+
+            base:
+              baseNotes[index % baseNotes.length]
+
+          },
+
+          image:
+            imagePool[index % imagePool.length],
+
+          description:
+            `A considered ${family.toLowerCase()} composition with a luminous opening and a beautifully textured dry-down. Made for ${(occasions[index % occasions.length]).toLowerCase()} rituals.`
+
+        };
+
+      }
+    );
+
+
+    /* =========================================
+       STATE
+    ========================================= */
+
+    let query = "";
+    let selectedFamily = "All notes";
+    let selectedSort = "featured";
+    let selectedProduct = null;
+
+    let favorites =
+      JSON.parse(
+        localStorage.getItem("scentoryFavorites") || "[]"
+      );
+
+
+    /* =========================================
+       DOM
+    ========================================= */
+
+    const productGrid =
+      document.getElementById("productGrid");
+
+    const resultCount =
+      document.getElementById("resultCount");
+
+    const emptyState =
+      document.getElementById("emptyState");
+
+    const savedCount =
+      document.getElementById("savedCount");
+
+    const searchInput =
+      document.getElementById("searchInput");
+
+    const searchField =
+      document.getElementById("searchField");
+
+    const searchTrigger =
+      document.getElementById("searchTrigger");
+
+    const closeSearch =
+      document.getElementById("closeSearch");
+
+    const sortSelect =
+      document.getElementById("sortSelect");
+
+    const productModal =
+      document.getElementById("productModal");
+
+
+    /* =========================================
+       AMAZON URL
+    ========================================= */
+
+    function amazonUrl(product) {
+
+      return (
+        "https://www.amazon.com/s?k=" +
+        encodeURIComponent(
+          `${product.brand} ${product.name} perfume`
+        )
+      );
+
+    }
+
+
+    /* =========================================
+       FAVORITES
+    ========================================= */
+
+    function saveFavorites() {
+
+      localStorage.setItem(
+        "scentoryFavorites",
+        JSON.stringify(favorites)
+      );
+
+      savedCount.textContent =
+        favorites.length;
+
+    }
+
+
+    function toggleFavorite(id) {
+
+      if (favorites.includes(id)) {
+
+        favorites =
+          favorites.filter(
+            item => item !== id
+          );
+
+      } else {
+
+        favorites.push(id);
+
+      }
+
+      saveFavorites();
+
+      renderProducts();
+
+      if (
+        selectedProduct &&
+        selectedProduct.id === id
+      ) {
+
+        updateModalFavorite();
+
+      }
+
+    }
+
+
+    function updateModalFavorite() {
+
+      const active =
+        favorites.includes(
+          selectedProduct.id
+        );
+
+      const button =
+        document.getElementById(
+          "modalFavorite"
+        );
+
+      button.classList.toggle(
+        "active",
+        active
+      );
+
+      button.textContent =
+        active ? "♥" : "♡";
+
+    }
+
+
+    /* =========================================
+       FILTER + SORT
+    ========================================= */
+
+    function getFilteredProducts() {
+
+      let results =
+        perfumes.filter(product => {
+
+          const searchable =
+            `${product.name} ${product.brand} ${product.family}`
+              .toLowerCase();
+
+          const matchesSearch =
+            searchable.includes(
+              query.toLowerCase()
+            );
+
+          const matchesFamily =
+            selectedFamily === "All notes" ||
+            product.family === selectedFamily;
+
+          return (
+            matchesSearch &&
+            matchesFamily
+          );
+
+        });
+
+
+      if (selectedSort === "price-low") {
+
+        results.sort(
+          (a, b) =>
+            a.price - b.price
+        );
+
+      }
+
+      if (selectedSort === "price-high") {
+
+        results.sort(
+          (a, b) =>
+            b.price - a.price
+        );
+
+      }
+
+      if (selectedSort === "rating") {
+
+        results.sort(
+          (a, b) =>
+            b.rating - a.rating
+        );
+
+      }
+
+      if (selectedSort === "newest") {
+
+        results.sort(
+          (a, b) =>
+            b.year - a.year
+        );
+
+      }
+
+      return results;
+
+    }
+
+
+    /* =========================================
+       RENDER PRODUCT CARD
+    ========================================= */
+
+    function renderProducts() {
+
+      const results =
+        getFilteredProducts();
+
+      resultCount.textContent =
+        results.length;
+
+      productGrid.innerHTML = "";
+
+      emptyState.style.display =
+        results.length === 0
+          ? "block"
+          : "none";
+
+
+      results.forEach(product => {
+
+        const isFavorite =
+          favorites.includes(
+            product.id
+          );
+
+        const card =
+          document.createElement("article");
+
+        card.className =
+          "perfume-card";
+
+        card.dataset.testid =
+          "perfume-card";
+
+
+        card.innerHTML = `
+
+          <div class="card-image-wrap">
+
+            <img
+              src="${product.image}"
+              alt="${product.name} perfume bottle"
+              loading="lazy"
+            >
+
+            <button
+              class="favorite ${isFavorite ? "active" : ""}"
+              data-action="favorite"
+              data-id="${product.id}"
+              aria-label="Save perfume"
+              data-testid="favorites-button"
+            >
+              ${isFavorite ? "♥" : "♡"}
+            </button>
+
+            <span class="card-index">
+              ${String(
+                product.id.split("-")[1]
+              ).padStart(2, "0")}
+            </span>
+
+          </div>
+
+
+          <div class="card-copy">
+
+            <div class="card-meta">
+
+              <span>
+                ${product.brand}
+              </span>
+
+              <span>
+                ${product.family}
+              </span>
+
+            </div>
+
+
+            <h3>
+              ${product.name}
+            </h3>
+
+
+            <div class="card-bottom">
+
+              <strong>
+                $${product.price}
+              </strong>
+
+              <button
+                class="details-button"
+                data-action="details"
+                data-id="${product.id}"
+                data-testid="perfume-card-view-details"
+              >
+                View details ↗
+              </button>
+
+            </div>
+
+          </div>
+
+        `;
+
+
+        productGrid.appendChild(card);
+
+      });
+
+    }
+
+
+    /* =========================================
+       PRODUCT CARD EVENTS
+    ========================================= */
+
+    productGrid.addEventListener(
+      "click",
+      event => {
+
+        const target =
+          event.target.closest(
+            "[data-action]"
+          );
+
+        if (!target) return;
+
+        const id =
+          target.dataset.id;
+
+        const action =
+          target.dataset.action;
+
+
+        if (action === "favorite") {
+
+          toggleFavorite(id);
+
+        }
+
+
+        if (action === "details") {
+
+          openProduct(
+            perfumes.find(
+              product =>
+                product.id === id
+            )
+          );
+
+        }
+
+      }
+    );
+
+
+    /* =========================================
+       SEARCH
+    ========================================= */
+
+    searchTrigger.addEventListener(
+      "click",
+      () => {
+
+        searchTrigger.style.display =
+          "none";
+
+        searchField.style.display =
+          "flex";
+
+        searchInput.focus();
+
+      }
+    );
+
+
+    document
+      .getElementById("headerSearch")
+      .addEventListener(
+        "click",
+        () => {
+
+          document
+            .getElementById("catalog")
+            .scrollIntoView({
+              behavior: "smooth"
+            });
+
+          searchTrigger.click();
+
+        }
+      );
+
+
+    searchInput.addEventListener(
+      "input",
+      event => {
+
+        query =
+          event.target.value;
+
+        renderProducts();
+
+      }
+    );
+
+
+    closeSearch.addEventListener(
+      "click",
+      () => {
+
+        query = "";
+
+        searchInput.value = "";
+
+        searchField.style.display =
+          "none";
+
+        searchTrigger.style.display =
+          "inline-flex";
+
+        renderProducts();
+
+      }
+    );
+
+
+    /* =========================================
+       FAMILY FILTERS
+    ========================================= */
+
+    document
+      .getElementById("filterGroup")
+      .addEventListener(
+        "click",
+        event => {
+
+          const button =
+            event.target.closest(
+              "[data-family]"
+            );
+
+          if (!button) return;
+
+          selectedFamily =
+            button.dataset.family;
+
+
+          document
+            .querySelectorAll(
+              "#filterGroup button"
+            )
+            .forEach(
+              item =>
+                item.classList.remove(
+                  "selected"
+                )
+            );
+
+
+          button.classList.add(
+            "selected"
+          );
+
+          renderProducts();
+
+        }
+      );
+
+
+    /* =========================================
+       SORT
+    ========================================= */
+
+    sortSelect.addEventListener(
+      "change",
+      event => {
+
+        selectedSort =
+          event.target.value;
+
+        renderProducts();
+
+      }
+    );
+
+
+    /* =========================================
+       PRODUCT MODAL
+    ========================================= */
+
+    function openProduct(product) {
+
+      selectedProduct =
+        product;
+
+
+      document.getElementById(
+        "detailImage"
+      ).src =
+        product.image;
+
+      document.getElementById(
+        "detailImage"
+      ).alt =
+        `${product.name} fragrance`;
+
+
+      document.getElementById(
+        "detailBrand"
+      ).textContent =
+        `${product.brand} / ${product.year}`;
+
+
+      document.getElementById(
+        "detailName"
+      ).textContent =
+        product.name;
+
+
+      document.getElementById(
+        "detailRating"
+      ).textContent =
+        product.rating;
+
+
+      document.getElementById(
+        "detailDescription"
+      ).textContent =
+        product.description;
+
+
+      document.getElementById(
+        "detailPrice"
+      ).textContent =
+        `$${product.price}`;
+
+
+      document.getElementById(
+        "detailSize"
+      ).textContent =
+        product.size;
+
+
+      document.getElementById(
+        "detailTop"
+      ).textContent =
+        product.notes.top;
+
+
+      document.getElementById(
+        "detailHeart"
+      ).textContent =
+        product.notes.heart;
+
+
+      document.getElementById(
+        "detailBase"
+      ).textContent =
+        product.notes.base;
+
+
+      document.getElementById(
+        "detailLongevity"
+      ).textContent =
+        product.longevity;
+
+
+      document.getElementById(
+        "detailSillage"
+      ).textContent =
+        product.sillage;
+
+
+      document.getElementById(
+        "detailGender"
+      ).textContent =
+        product.gender;
+
+
+      document.getElementById(
+        "amazonButton"
+      ).href =
+        amazonUrl(product);
+
+
+      updateModalFavorite();
+
+
+      productModal.style.display =
+        "flex";
+
+      document.body.classList.add(
+        "modal-open"
+      );
+
+    }
+
+
+    function closeProduct() {
+
+      productModal.style.display =
+        "none";
+
+      document.body.classList.remove(
+        "modal-open"
+      );
+
+      selectedProduct = null;
+
+    }
+
+
+    document
+      .getElementById("detailClose")
+      .addEventListener(
+        "click",
+        closeProduct
+      );
+
+
+    productModal.addEventListener(
+      "click",
+      event => {
+
+        if (
+          event.target ===
+          productModal
+        ) {
+          closeProduct();
+        }
+
+      }
+    );
+
+
+    document
+      .getElementById("modalFavorite")
+      .addEventListener(
+        "click",
+        () => {
+
+          if (!selectedProduct)
+            return;
+
+          toggleFavorite(
+            selectedProduct.id
+          );
+
+        }
+      );
+
+
+    document.addEventListener(
+      "keydown",
+      event => {
+
+        if (
+          event.key === "Escape" &&
+          selectedProduct
+        ) {
+
+          closeProduct();
+
+        }
+
+      }
+    );
+
+
+    /* =========================================
+       MOBILE MENU
+    ========================================= */
+
+    const menuButton =
+      document.getElementById(
+        "menuButton"
+      );
+
+    const desktopNav =
+      document.getElementById(
+        "desktopNav"
+      );
+
+
+    menuButton.addEventListener(
+      "click",
+      () => {
+
+        desktopNav.classList.toggle(
+          "open"
+        );
+
+        menuButton.textContent =
+          desktopNav.classList.contains(
+            "open"
+          )
+            ? "×"
+            : "☰";
+
+      }
+    );
+
+
+    desktopNav
+      .querySelectorAll("a")
+      .forEach(link => {
+
+        link.addEventListener(
+          "click",
+          () => {
+
+            desktopNav.classList.remove(
+              "open"
+            );
+
+            menuButton.textContent =
+              "☰";
+
+          }
+        );
+
+      });
+
+
+    /* =========================================
+       SAVED BUTTON
+    ========================================= */
+
+    document
+      .getElementById("savedButton")
+      .addEventListener(
+        "click",
+        () => {
+
+          if (favorites.length === 0) {
+
+            document
+              .getElementById("catalog")
+              .scrollIntoView({
+                behavior: "smooth"
+              });
+
+            return;
+
+          }
+
+
+          query = "";
+
+          selectedFamily =
+            "All notes";
+
+          renderProducts();
+
+          document
+            .getElementById("catalog")
+            .scrollIntoView({
+              behavior: "smooth"
+            });
+
+        }
+      );
+
+
+    /* =========================================
+       INITIALIZE
+    ========================================= */
+
+    saveFavorites();
+
+    renderProducts();
+
+  </script>
+
+</body>
+</html>
